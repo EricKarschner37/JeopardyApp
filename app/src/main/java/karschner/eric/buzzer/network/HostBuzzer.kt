@@ -14,11 +14,10 @@ const val HOST_URI = "wss://jeopardy.karschner.studio/ws/buzzer/host/"
 class HostBuzzer(): Buzzer(HOST_URI) {
     override var TAG = "HostBuzzer"
 
-    fun playerResponse(name: String, correct: Boolean){
+    fun playerResponse(correct: Boolean){
         val json = JSONObject()
         json.put("request", "response")
         json.put("correct", correct)
-        json.put("name", name)
 
         send(json.toString())
     }

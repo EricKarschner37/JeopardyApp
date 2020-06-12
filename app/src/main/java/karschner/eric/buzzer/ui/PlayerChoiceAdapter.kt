@@ -5,13 +5,14 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.Button
 import androidx.recyclerview.widget.RecyclerView
+import karschner.eric.buzzer.Player
 import karschner.eric.buzzer.R
 import karschner.eric.buzzer.network.HostBuzzer
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import org.json.JSONArray
 
-class PlayerChoiceAdapter(private val players: JSONArray, private val buzzer: HostBuzzer) : RecyclerView.Adapter<PlayerChoiceAdapter.ViewHolder>() {
+class PlayerChoiceAdapter(private val players: Array<Player>, private val buzzer: HostBuzzer) : RecyclerView.Adapter<PlayerChoiceAdapter.ViewHolder>() {
     class ViewHolder(val btn: Button): RecyclerView.ViewHolder(btn)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -19,14 +20,14 @@ class PlayerChoiceAdapter(private val players: JSONArray, private val buzzer: Ho
         return ViewHolder(btn)
     }
 
-    override fun getItemCount(): Int = players.length()
+    override fun getItemCount(): Int = players.size
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val name = players.getString(position)
-        holder.btn.text = name
+        val player = players[position]
+        holder.btn.text = player.name
         holder.btn.setOnClickListener {
             GlobalScope.launch{
-                buzzer.choosePlayer(name)
+                buzzer.choosePlayer(player.name)
             }
         }
     }

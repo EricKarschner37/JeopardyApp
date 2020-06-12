@@ -22,6 +22,9 @@ abstract class Buzzer(uri: String): WebSocketClient(URI(uri)) {
 
     override fun onException(e: Exception?) {
         Log.e(TAG, e?.message)
+        val json = JSONObject()
+        json.put("message", "end")
+        notifyObservers(json.toString())
     }
 
     override fun onPingReceived(data: ByteArray?) {}
@@ -44,9 +47,9 @@ abstract class Buzzer(uri: String): WebSocketClient(URI(uri)) {
     }
 
     init {
-        setConnectTimeout(10000)
+        setConnectTimeout(1000)
         setReadTimeout(60000)
-        enableAutomaticReconnection(1000)
+        enableAutomaticReconnection(10)
         connect()
     }
 }
