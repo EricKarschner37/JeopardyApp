@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    style="@style/Container">
+
+    <TextView
+        style="@style/TextAppearance.Buzzer.Title"
+        android:id="@+id/player_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textAlignment="center"
+        android:gravity="center_horizontal"
+        android:text="@string/player"
+        android:layout_marginBottom="72dp"/>
+
+    <include
+        android:id="@+id/question"
+        layout="@layout/question_view" />
+
+    <include
+        android:id="@+id/connecting_layout"
+        layout="@layout/connecting_view" />
+
+    <View
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_weight="1" />
+
+    <include
+        android:id="@+id/buzz_layout"
+        layout="@layout/buzz_view" />
+
+</LinearLayout>

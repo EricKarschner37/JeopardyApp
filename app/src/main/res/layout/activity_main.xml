@@ -1,28 +1,88 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<androidx.drawerlayout.widget.DrawerLayout
+    android:id="@+id/drawer"
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:gravity="center_horizontal"
-    tools:context=".MainActivity">
+    android:layout_width="match_parent">
 
-    <TextView
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".MainActivity"
+        android:id="@+id/container">
+
+        <com.google.android.material.appbar.AppBarLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:elevation="0dp">
+
+            <androidx.appcompat.widget.Toolbar
+                android:id="@+id/app_bar"
+                style="@style/Widget.Buzzer.Toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                android:paddingStart="12dp"
+                android:paddingEnd="12dp"
+                android:paddingLeft="12dp"
+                android:paddingRight="12dp"
+                app:contentInsetStart="0dp"
+                app:title="@string/app_name" />
+        </com.google.android.material.appbar.AppBarLayout>
+    </FrameLayout>
+
+    <LinearLayout
+        android:id="@+id/settings_view"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Welcome! Are you a host, or a player?"/>
+        android:layout_height="match_parent"
+        android:layout_gravity="end"
+        android:fitsSystemWindows="true"
+        android:background="@android:color/white"
+        android:orientation="vertical"
+        android:paddingRight="8dp"
+        android:paddingLeft="8dp"
+        android:paddingTop="8dp">
 
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Host"
-        android:id="@+id/host_btn" />
+        <com.google.android.material.textview.MaterialTextView
+            style="@style/TextAppearance.Buzzer.Header"
+            android:paddingRight="64dp"
+            android:paddingLeft="4dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/settings" />
 
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Player"
-        android:id="@+id/player_btn" />
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="64dp"
+            android:background="@android:color/black" />
 
-</LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                style="@style/TextAppearance.Buzzer.Body"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/host" />
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_weight="1" />
+
+            <Switch
+                android:id="@+id/host_switch"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="end"
+                android:switchTextAppearance="@style/TextAppearance.Buzzer.Body"/>
+        </LinearLayout>
+
+
+    </LinearLayout>
+</androidx.drawerlayout.widget.DrawerLayout>
