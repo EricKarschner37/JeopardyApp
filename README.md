@@ -4,7 +4,7 @@ Companion application for the [self-hosted Jeopardy! game](https://github.com/Er
 
 ## Overview
 
-This Jeopardy! Buzzer App is an Android application with minimum support for SDK version 16. It is written mainly in Kotlin. It uses gusavila92's [Java/Android Websocket Client](https://github.com/gusavila92/java-android-websocket-client) library to interface with the Jeopardy! Websocket server.
+This Jeopardy! Buzzer App is an Android application with minimum support for SDK version 16. It is written mainly in Kotlin. It uses the `ktor` WebSockets library for Kotlin to communicate with the Jeopardy server.
 
 ## Features
 
