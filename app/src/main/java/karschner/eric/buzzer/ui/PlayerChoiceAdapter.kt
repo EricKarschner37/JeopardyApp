@@ -5,14 +5,16 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.Button
 import androidx.recyclerview.widget.RecyclerView
+import io.ktor.http.cio.websocket.*
 import karschner.eric.buzzer.Player
 import karschner.eric.buzzer.R
-import karschner.eric.buzzer.network.HostBuzzer
 import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.channels.SendChannel
 import kotlinx.coroutines.launch
 import org.json.JSONArray
+import org.json.JSONObject
 
-class PlayerChoiceAdapter(private val players: Array<Player>, private val buzzer: HostBuzzer) : RecyclerView.Adapter<PlayerChoiceAdapter.ViewHolder>() {
+class PlayerChoiceAdapter(private val players: Array<Player>, private val outgoing: SendChannel<Frame>) : RecyclerView.Adapter<PlayerChoiceAdapter.ViewHolder>() {
     class ViewHolder(val btn: Button): RecyclerView.ViewHolder(btn)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -27,7 +29,10 @@ class PlayerChoiceAdapter(private val players: Array<Player>, private val buzzer
         holder.btn.text = player.name
         holder.btn.setOnClickListener {
             GlobalScope.launch{
-                buzzer.choosePlayer(player.name)
+                val msg = JSONObject()
+                msg.put("request", "player")
+                msg.put("player", player.name)
+                outgoing.send(Frame.Text(msg.toString()))
             }
         }
     }
