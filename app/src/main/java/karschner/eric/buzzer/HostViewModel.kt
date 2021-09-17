@@ -16,7 +16,7 @@ import kotlinx.coroutines.launch
 import org.json.JSONObject
 
 class HostViewModel() : ViewModel() {
-    private val WS_HOST = "jeopardy.karschner.studio"
+    private val WS_HOST = "go-jeopardy-jeopardy.apps.okd4.csh.rit.edu"
     private val WS_PATH = "ws/host"
     private val TAG = "HostViewModel"
     private val mainHandler = Handler()
