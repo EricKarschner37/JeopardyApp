@@ -28,3 +28,5 @@ data class State(val state: String, val clue: String, val response: String, val 
 }
 
 data class Player(val name: String, val balance: Int)
+
+data class Position(val row: Int, val column: Int)

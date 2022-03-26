@@ -16,7 +16,7 @@ import org.json.JSONObject
 
 
 class PlayerViewModel(val name: String) : ViewModel() {
-    private val WS_HOST = "go-jeopardy-jeopardy.apps.okd4.csh.rit.edu"
+    private val WS_HOST = "jeopardy.karschner.studio"
     private val WS_PATH = "ws/buzzer"
     private val TAG = "PlayerViewModel"
     private val mainHandler = android.os.Handler()

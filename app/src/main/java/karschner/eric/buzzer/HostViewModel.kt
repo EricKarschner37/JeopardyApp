@@ -15,9 +15,9 @@ import kotlinx.coroutines.channels.SendChannel
 import kotlinx.coroutines.launch
 import org.json.JSONObject
 
-class HostViewModel() : ViewModel() {
-    private val WS_HOST = "go-jeopardy-jeopardy.apps.okd4.csh.rit.edu"
-    private val WS_PATH = "ws/host"
+class HostViewModel(gameNum: Int) : ViewModel() {
+    private val WS_HOST = "jeopardy.karschner.studio"
+    private val WS_PATH = "ws/$gameNum/host"
     private val TAG = "HostViewModel"
     private val mainHandler = Handler()
 
@@ -35,6 +35,7 @@ class HostViewModel() : ViewModel() {
     private lateinit var outgoing: SendChannel<Frame>
 
     init {
+        Log.i("HostViewModel", "Connecting to game $gameNum")
         val client = HttpClient(OkHttp) {
             install(WebSockets)
         }

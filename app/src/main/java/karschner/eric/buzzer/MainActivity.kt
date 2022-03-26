@@ -4,6 +4,8 @@ import android.content.Context
 import android.content.SharedPreferences
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
+import android.widget.ProgressBar
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -21,8 +23,16 @@ import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.unit.dp
 import androidx.core.content.edit
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewmodel.compose.viewModel
+import karschner.eric.buzzer.network.Games
 import kotlinx.android.synthetic.main.activity_main.*
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
 
 class MainActivity : AppCompatActivity(){
 
@@ -34,16 +44,39 @@ class MainActivity : AppCompatActivity(){
 
         prefs = getSharedPreferences("prefs", Context.MODE_PRIVATE)
 
+        val retrofit = Retrofit.Builder()
+            .baseUrl("https://jeopardy.karschner.studio/")
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
+
+        val gamesService = retrofit.create(Games::class.java)
+
         setSupportActionBar(app_bar)
 
         setContent { MaterialTheme {
             var host by remember { mutableStateOf(false)}
             var connected by remember { mutableStateOf(false) }
             var name by rememberSaveable { mutableStateOf(prefs.getString("name", "")!!) }
+            var gameNum by remember { mutableStateOf<Int?>(null)}
+            var gameNums by remember { mutableStateOf(listOf<Int>())}
+
+            gamesService.getGames().enqueue( object: Callback<List<Int>> {
+                override fun onResponse(call: Call<List<Int>>, response: Response<List<Int>>) {
+                    Log.i("MainActivity", response.body()?.toString().orEmpty())
+                    response.body()?.let { gameNums = it }
+                }
+
+                override fun onFailure(call: Call<List<Int>>, t: Throwable) {
+                    Log.i("MainActivity", t.localizedMessage.orEmpty())
+                }
+            })
 
             when {
+                host && gameNum !== null -> {
+                    HostScreen(gameNum!!)
+                }
                 host -> {
-                    HostScreen()
+                    HostLoginScreen(gameNums, onGameSelect = {gameNum = it})
                 }
                 connected -> {
                     PlayerScreen(PlayerViewModel(name))
@@ -58,6 +91,26 @@ class MainActivity : AppCompatActivity(){
             }
         }
     } }
+
+    @Composable
+    fun HostLoginScreen(gameNums: List<Int>, onGameSelect: (Int) -> Unit) {
+        Column(modifier = Modifier
+            .padding(16.dp)
+            .fillMaxSize(), horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Text(
+                text= "Jeopardy!",
+                modifier = Modifier.padding(bottom = 32.dp),
+                style = MaterialTheme.typography.h3
+            )
+            Text(
+                text = "Welcome, host! Please select the game number shown on the board.",
+                modifier = Modifier.padding(bottom = 128.dp),
+                style = MaterialTheme.typography.subtitle1
+            )
+            GameChoices(gameNums, onGameSelect)
+        }
+    }
 
     @Composable
     fun PlayerLoginScreen(name: String, onNameChange: (String) -> Unit, onConnectPress: () -> Unit, onHostPress: () -> Unit) {
@@ -108,7 +161,10 @@ class MainActivity : AppCompatActivity(){
     }
 
     @Composable
-    fun HostScreen(viewModel: HostViewModel = viewModel()) {
+    fun HostScreen(gameNum: Int) {
+        val viewModel: HostViewModel = viewModel(factory=object: ViewModelProvider.NewInstanceFactory() {
+            override fun <T : ViewModel?> create(modelClass: Class<T>):T = HostViewModel(gameNum) as T
+        })
         val stateName: String by viewModel.stateName.observeAsState("board")
         val buzzersOpen: Boolean by viewModel.buzzersOpen.observeAsState(false)
         val clue: Clue by viewModel.clue.observeAsState(
@@ -226,6 +282,23 @@ class MainActivity : AppCompatActivity(){
                 modifier = Modifier.fillMaxWidth()
             ) {
                 Text(text = "Buzz")
+            }
+        }
+    }
+
+    @Composable
+    private fun GameChoices(gameNums: List<Int>?, onGameSelect: (Int) -> Unit) {
+        if (gameNums == null) {
+            return CircularProgressIndicator()
+        }
+
+        LazyColumn{
+            items(gameNums.sorted()) {
+                Button(
+                    onClick = { onGameSelect(it) }
+                ) {
+                    Text(text = "Game #$it")
+                }
             }
         }
     }
