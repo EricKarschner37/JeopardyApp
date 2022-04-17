@@ -29,8 +29,8 @@ class HostViewModel(gameNum: Int) : ViewModel() {
     val clue: LiveData<MainActivity.Clue> = _clue
     private val _player = MutableLiveData<String>()
     val player: LiveData<String> = _player
-    private val _players = MutableLiveData<List<Pair<String, Int>>>()
-    val players: LiveData<List<Pair<String, Int>>> = _players
+    private val _players = MutableLiveData<List<Player>>()
+    val players: LiveData<List<Player>> = _players
 
     private lateinit var outgoing: SendChannel<Frame>
 
@@ -60,12 +60,12 @@ class HostViewModel(gameNum: Int) : ViewModel() {
                             json.getString("response")
                         )
                         _player.value = json.getString("selected_player")
-                        val newPlayers = mutableListOf<Pair<String, Int>>()
+                        val newPlayers = mutableListOf<Player>()
                         val playersJson = json.getJSONObject("players")
                         playersJson.keys().forEach {
                             Log.i(TAG, playersJson.getJSONObject(it).toString())
                             newPlayers.add(
-                                Pair(it, playersJson.getJSONObject(it).getInt("Points"))
+                                Player(it, playersJson.getJSONObject(it).getInt("Points"))
                             )
                         }
                         _players.value = newPlayers
