@@ -53,7 +53,7 @@ class HostViewModel(gameNum: Int) : ViewModel() {
                     if (json.getString("message") != "state") continue
                     mainHandler.post{
                         _buzzersOpen.value = json.getBoolean("buzzers_open")
-                        _stateName.value = json.getString("name")
+                        _stateName.value = json.getString("state_type")
                         _clue.value = MainActivity.Clue(
                             json.getInt("cost"),
                             json.getString("clue"),

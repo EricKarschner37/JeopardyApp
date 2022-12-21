@@ -25,7 +25,7 @@ fun HostScreen(gameNum: Int) {
     val viewModel: HostViewModel = viewModel(factory=object: ViewModelProvider.NewInstanceFactory() {
         override fun <T : ViewModel?> create(modelClass: Class<T>):T = HostViewModel(gameNum) as T
     })
-    val stateName: String by viewModel.stateName.observeAsState("board")
+    val stateName: String by viewModel.stateName.observeAsState("Board")
     val buzzersOpen: Boolean by viewModel.buzzersOpen.observeAsState(false)
     val clue: MainActivity.Clue by viewModel.clue.observeAsState(
         MainActivity.Clue(
@@ -53,14 +53,14 @@ fun HostScreen(gameNum: Int) {
         ClueDisplay(clue = clue)
         Spacer(modifier = Modifier.weight(1.0f))
         when (stateName) {
-            "clue" -> BuzzerControl(
+            "Clue" -> BuzzerControl(
                 selectedPlayer,
                 buzzersOpen,
                 viewModel::onBuzzerSwitched,
                 viewModel::playerRight,
                 viewModel::playerWrong
             )
-            "daily_double" -> PlayerChoices(players) { player -> viewModel.choosePlayer(player.name) }
+            "DailyDouble" -> PlayerChoices(players) { player -> viewModel.choosePlayer(player.name) }
         }
     }
 }
